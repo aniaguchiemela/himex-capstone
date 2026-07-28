@@ -1,0 +1,8 @@
+
+BSSID, First time seen, Last time seen, channel, Speed, Privacy, Cipher, Authentication, Power, # beacons, # IV, LAN IP, ID-length, ESSID, Key
+98:A9:42:45:C3:0F, 2026-07-28 23:54:30, 2026-07-28 23:57:10, 11,  65, WPA2, CCMP, PSK,  -3,      214,    16458,   0.  0.  0.  0,  13, MTN_4G_45C30F, 
+
+Station MAC, First time seen, Last time seen, Power, # packets, BSSID, Probed ESSIDs
+5E:EE:FC:DC:AF:21, 2026-07-28 23:54:30, 2026-07-28 23:57:10, -33,    11876, 98:A9:42:45:C3:0F,
+E8:2A:EA:6A:8A:97, 2026-07-28 23:54:30, 2026-07-28 23:57:10, -44,     4933, 98:A9:42:45:C3:0F,
+
