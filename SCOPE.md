@@ -15,8 +15,11 @@ third-party infrastructure, or real-world access points are targeted at any poin
 - Traffic analysis via Wireshark (beacon frames, handshake capture, DNS traffic)
 - Known vulnerability review (e.g. KRACK) as applied to the simulated AP configuration
 - WPA2/WPA3 configuration review and upgrade path documentation
-- Non-destructive deauthentication capture (packet analysis only — no live client
-  disruption)
+-  Deauthentication testing was performed as a bounded, 5-frame burst
+  (`aireplay-ng --deauth 5`) directed only at the tester's own client device (phone),
+  against the tester's own MiFi. This caused a brief, expected disconnect/reconnect
+  cycle on the test phone only, used to capture a fresh WPA2 handshake. No other
+  devices, clients, or networks were targeted or affected.
 - Hardening recommendations with before/after configuration evidence
 - MITRE ATT&CK mapping of all findings
 
