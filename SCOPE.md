@@ -9,6 +9,17 @@ third-party infrastructure, or real-world access points are targeted at any poin
 - **Attacker system:** Kali Linux (VM)
 - **Network isolation:** Lab VMs are isolated from the host's production network and
   the internet during active testing phases
+  
+## Note on lab environment
+This assessment was originally scoped around a VM-based lab (VirtualBox) target.
+In practice, the target was a real, owned MiFi device (MTN Broadband 4G MiFi ZLT
+M30S) rather than a virtualized access point. This was a deliberate substitution:
+genuine 802.11 wireless behavior (beacon frames, handshakes, RF characteristics)
+cannot be produced between two virtualized hosts, since VM networking operates over
+software-defined virtual links, not real radio. Testing against real, owned hardware
+produced authentic, reproducible wireless evidence that a simulated VM-to-VM setup
+could not have provided. All other scope constraints (owned devices only, no
+third-party targets, non-destructive testing) were maintained throughout.
 
 ## In Scope
 - Passive and active wireless reconnaissance (airmon-ng, airodump-ng)
