@@ -13,6 +13,7 @@ or unconfirmed findings are included beyond what's explicitly flagged as such.
 | 3 | WPA2 4-way handshake captured while phone reassociated to the AP | `evidence/logs/handshake_capture-01.cap`, confirmed via `aircrack-ng` (1 handshake) | Credential Access | Steal or Forge Authentication Certificates / Network Sniffing | T1557.002 |
 | 4 | WPS enabled and in "Configured" state on the target AP | `docs/beacon-frame-analysis.md`, Vendor Specific: Microsoft Corp. WPS tag | Credential Access | Brute Force (weak alternate authentication path) | T1110 |
 | 5 | Client device confirmed patched (2026-05-01); AP confirmed WPA2-only with no WPA3 support | `docs/research-krack-wpa3.md` | Credential Access (theoretical, not exploited) | Adversary-in-the-Middle | T1557 |
+|  6 | Bounded 5-frame deauthentication forced reassociation and fresh handshake capture on the tester's own client device | `evidence/logs/deauth_capture-01.cap`, confirmed via `aircrack-ng` (1 handshake), screenshot `deauth_capture_result.png` | Impact / Credential Access | Network Denial of Service (client-scoped) enabling Adversary-in-the-Middle handshake capture | T1498 / T1557 |
 
 ## Notes on mapping decisions
 
@@ -37,14 +38,19 @@ technique class that KRACK-style vulnerabilities fall under, alongside the findi
 that this specific environment (patched client, WPA2-only AP) was assessed for — not
 exploited for — that exposure.
 
-## What is intentionally not mapped here
+## Deauthentication finding (completed)
 
-Deauthentication testing was scoped for this assessment but paused before execution
-(see `SCOPE.md`). Once completed, it would map to:
-- **Tactic:** Impact
-- **Technique:** Network Denial of Service / Endpoint Denial of Service concepts, or
-  more precisely for wireless: Adversary-in-the-Middle (T1557) enablement via forced
-  reassociation, depending on how the resulting handshake is used
+A bounded, 5-frame deauthentication burst was sent against the tester's own client
+device only, using `aireplay-ng --deauth 5`. This forced a brief disconnect and
+automatic reconnection, during which a fresh WPA2 handshake was captured and verified
+via `aircrack-ng` (`1 handshake`). This demonstrates the practical technique behind
+Row 5 (Adversary-in-the-Middle / handshake interception): an attacker capable of
+sending deauth frames toward a target client can force a handshake to occur on
+command, rather than waiting passively for one to happen naturally.
 
-This row will be added once that phase is actually carried out, rather than being
-pre-filled with an untested finding.
+An earlier attempt at this test failed due to a copy-paste error (a placeholder MAC
+address was used instead of the actual target MAC), which caused an unbounded,
+continuous deauth flood against unintended clients for approximately 3 minutes before
+being manually stopped. That capture was discarded and is not included in this
+repository's evidence. The successful, bounded 5-frame test described above is the one
+documented and evidenced here.
