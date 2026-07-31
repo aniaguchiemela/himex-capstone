@@ -86,6 +86,31 @@ authentication works and is not, by itself, a vulnerability — passphrase stren
 what determines real-world risk from a captured handshake, which was out of scope to
 test.
 
+### Finding 5 — Nmap service scan reveals outdated embedded Linux kernel and exposed services
+
+Active scanning of the admin interface (192.168.0.1) identified three open TCP ports:
+- **Port 53** — dnsmasq 2.80 (DNS resolver for connected clients)
+- **Port 80/443** — "Demo-Webs" HTTP/HTTPS admin panel
+- **OS fingerprint** — Linux kernel 3.2–3.16 (2012–2016 era)
+
+dnsmasq 2.80 is affected by the DNSpooq vulnerability cluster
+(CVE-2020-25681 through CVE-2020-25687), a set of heap overflow and
+DNS cache poisoning flaws patched in dnsmasq 2.83. This device
+runs 2.80 and cannot be user-upgraded.
+
+The embedded Linux kernel version is consistent with long-unsupported
+firmware — kernel 3.16 reached end-of-life and no longer receives
+security patches. This is common for IoT/embedded network hardware
+but represents an unresolvable residual risk for this device class.
+
+**Positive finding:** The admin panel returns strong HTTP security headers
+(HSTS, X-Frame-Options, X-Content-Type-Options, X-XSS-Protection),
+indicating reasonable baseline web hardening by the manufacturer.
+
+**Severity:** Medium (dnsmasq CVEs), High (kernel EOL — unpatchable)
+**Status:** Documented as residual hardware limitation. No user-side fix available.
+Full detail in `docs/nmap-scan-findings.md`.
+
 ## MITRE ATT&CK Mapping
 Full mapping table in `attck-mapping/findings-to-attck.md`. Summary:
 
@@ -96,7 +121,7 @@ Full mapping table in `attck-mapping/findings-to-attck.md`. Summary:
 | Handshake capture | Credential Access | Steal or Forge Auth Certificates (T1557.002) |
 | WPS enabled | Credential Access | Brute Force (T1110) |
 | KRACK exposure (theoretical) | Credential Access | Adversary-in-the-Middle (T1557) |
-
+| dnsmasq 2.80 / kernel 3.x EOL | Reconnaissance | Gather Victim Host Info (T1592.001) |
 ## Hardening Applied
 Full before/after documentation in `hardening/before-after-config.md`. Summary:
 
@@ -118,6 +143,11 @@ Full before/after documentation in `hardening/before-after-config.md`. Summary:
    undocumented fix.
 4. **Budget for WPA3-capable hardware** over time. WPA3 removes KRACK-class exposure
    structurally rather than relying on ongoing client patch discipline.
+5. **Replace aging hardware with actively maintained firmware** — devices
+   running end-of-life embedded Linux kernels (3.x era) cannot receive
+   security patches regardless of admin panel settings. For SMEs handling
+   sensitive data, hardware refresh cycles should account for firmware
+   support windows, not just physical failure rates.
 
 ## Limitations
 - A non-destructive deauthentication capture was planned but deferred due to testing

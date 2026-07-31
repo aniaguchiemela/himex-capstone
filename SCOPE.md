@@ -20,7 +20,6 @@ software-defined virtual links, not real radio. Testing against real, owned hard
 produced authentic, reproducible wireless evidence that a simulated VM-to-VM setup
 could not have provided. All other scope constraints (owned devices only, no
 third-party targets, non-destructive testing) were maintained throughout.
-
 ## In Scope
 - Passive and active wireless reconnaissance (airmon-ng, airodump-ng)
 - Traffic analysis via Wireshark (beacon frames, handshake capture, DNS traffic)
